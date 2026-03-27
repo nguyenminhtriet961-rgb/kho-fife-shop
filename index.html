@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MTRIET STORE | GAME GÌ CŨNG CÓ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- RESET & CĂN GIỮA APP --- */
+        body { 
+            background-color: #e9ecef; /* Nền xám ngoài rìa trên PC */
+            margin: 0; 
+            font-family: 'Roboto', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .app-wrapper {
+            max-width: 480px; /* Chiều rộng chuẩn của App trên PC */
+            margin: 0 auto; 
+            background-color: #f5f5f5; 
+            min-height: 100vh; 
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            position: relative;
+            padding-bottom: 70px; /* Chừa chỗ cho Bottom Nav */
+        }
+
+        /* --- HEADER --- */
+        .header { 
+            background: linear-gradient(-180deg,#f53d2d,#f63); 
+            color: white; 
+            padding: 15px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            text-align: center; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header h1 { margin: 0; font-size: 18px; font-weight: 700; text-transform: uppercase; }
+
+        /* --- BANNER --- */
+        .banner { 
+            width: 94%; 
+            margin: 12px auto; 
+            background: #000; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .banner img { width: 100%; display: block; height: auto; }
+
+        /* --- BỘ LỌC (CATEGORIES) --- */
+        .categories { 
+            display: flex; 
+            overflow-x: auto; 
+            white-space: nowrap; 
+            background: white; 
+            padding: 15px 10px; 
+            scrollbar-width: none; 
+            border-bottom: 1px solid #eee;
+            gap: 12px;
+        }
+        .categories::-webkit-scrollbar { display: none; }
+        
+        .cat-item { 
+            flex: 0 0 65px; 
+            text-align: center; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            transition: 0.2s;
+        }
+        .cat-item:active { transform: scale(0.9); }
+        .cat-icon { 
+            width: 45px; height: 45px; 
+            background: #fff2ee; 
+            border-radius: 14px; 
+            margin-bottom: 6px; 
+            display: flex; align-items: center; justify-content: center; 
+            border: 1px solid #ffdbd0; 
+            transition: all 0.2s;
+        }
+        .cat-icon img { width: 28px; height: 28px; }
+        .cat-name { font-size: 10px; color: #555; font-weight: 500; }
+
+        /* Trạng thái Active */
+        .cat-item.active .cat-icon { border: 2px solid #ee4d2d; background: #ffebe5; }
+        .cat-item.active .cat-name { color: #ee4d2d; font-weight: 700; }
+
+        /* --- GRID SẢN PHẨM --- */
+        .container { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px; 
+            padding: 10px; 
+            align-items: stretch; /* Đảm bảo các thẻ cao bằng nhau */
+        }
+
+        .card { 
+            background: white; 
+            border-radius: 4px; 
+            overflow: hidden; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            border: 0.5px solid #eaeaea;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .badge-fav { 
+            position: absolute; top: 6px; left: -2px; 
+            background: #ee4d2d; color: white; 
+            font-size: 9px; padding: 2px 6px; 
+            border-radius: 0 2px 2px 0; z-index: 1; 
+        }
+
+        .card img { width: 100%; height: 160px; object-fit: cover; }
+        
+        .info { 
+            padding: 10px 8px; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+        }
+        
+        .title { 
+            font-size: 12px; color: #333; 
+            height: 34px; overflow: hidden; 
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
+            line-height: 1.4; margin-bottom: 8px; 
+        }
+        
+        .price-row { display: flex; align-items: baseline; margin-bottom: 5px; }
+        .price { color: #ee4d2d; font-size: 16px; font-weight: 600; }
+        .old-price { color: #999; text-decoration: line-through; font-size: 10px; margin-left: 5px; }
+
+        /* Nút Tải Xuống */
+        @keyframes blink-btn { 
+            0% { transform: scale(1); box-shadow: 0 0 0px transparent; }
+            50% { transform: scale(1.02); box-shadow: 0 0 8px rgba(238, 77, 45, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 0 0px transparent; }
+        }
+        .btn-download { 
+            width: 100%; background: #ee4d2d; color: white; 
+            border: none; padding: 8px 0; font-weight: 700; font-size: 11px; 
+            border-radius: 3px; margin: 5px 0; cursor: pointer; 
+            text-transform: uppercase; animation: blink-btn 2s infinite;
+        }
+
+        /* Thanh Sold */
+        .sold-bar { 
+            background: #ffbd9d; height: 14px; border-radius: 10px; 
+            position: relative; overflow: hidden; text-align: center; margin-top: 5px;
+        }
+        .sold-fill { 
+            background: linear-gradient(90deg,#ff5722,#ff7337); 
+            height: 100%; position: absolute; left: 0; top: 0;
+        }
+        .sold-text { position: relative; font-size: 8px; color: white; font-weight: 700; z-index: 1; line-height: 14px; }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav { 
+            position: fixed; bottom: 0; 
+            width: 100%; max-width: 480px; /* Khớp với app-wrapper */
+            left: 50%; transform: translateX(-50%); /* Căn giữa màn hình PC */
+            background: white; display: flex; justify-content: space-around; 
+            padding: 8px 0; border-top: 1px solid #e5e5e5; z-index: 1000; 
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-link { text-align: center; text-decoration: none; color: #666; font-size: 10px; flex: 1; }
+        .nav-link img { width: 22px; height: 22px; margin-bottom: 3px; }
+        .nav-link.active { color: #ee4d2d; }
+    </style>
+</head>
+ 
+<body>
+
+<div class="app-wrapper">
+
+    <div class="header">
+        <h1>MTRIET STORE</h1>
+    </div>
+
+   <div class="banner">
+        <img src="image_6.png" alt="MTRIET STORE Banner">
+    </div> 
+
+    <div class="categories">
+        <div class="cat-item active" onclick="filterCategory('all', this)">
+            <div class="cat-icon"><img src="https://img.icons8.com/color/48/shop.png"></div>
+            <div class="cat-name">Tất cả</div>
+        </div>
+        <div class="cat-item" onclick="filterCategory('Roblox', this)">
+            <div class="cat-icon"><img src="https://img.icons8.com/color/48/roblox.png"></div>
+            <div class="cat-name">Roblox</div>
+        </div>
+        <div class="cat-item" onclick="filterCategory('Free Fire', this)">
+            <div class="cat-icon"><img src="https://img.icons8.com/color/48/free-fire.png"></div>
+            <div class="cat-name">Free Fire</div>
+        </div>
+        <div class="cat-item" onclick="filterCategory('Liên Quân', this)">
+            <div class="cat-icon"><img src="https://img.icons8.com/color/48/arena-of-valor.png"></div>
+            <div class="cat-name">Liên Quân</div>
+        </div>
+        <div class="cat-item" onclick="filterCategory('PUBG', this)">
+            <div class="cat-icon"><img src="https://img.icons8.com/color/48/pubg.png"></div>
+            <div class="cat-name">PUBG</div>
+        </div>
+        <div class="cat-item" onclick="filterCategory('8 Ball', this)">
+            <div class="cat-icon"><img src="https://img.icons8.com/color/48/8-ball-pool.png"></div>
+            <div class="cat-name">8 Ball</div>
+        </div>
+        <div class="cat-item" onclick="filterCategory('Together', this)">
+            <div class="cat-icon"><img src="https://img.icons8.com/color/48/play-together.png"></div>
+            <div class="cat-name">Together</div>
+        </div>
+        <div class="cat-item" onclick="filterCategory('Crossfire', this)">
+            <div class="cat-icon"><img src="https://img.icons8.com/color/48/crossfire.png"></div>
+            <div class="cat-name">Đột Kích</div>
+        </div>
+    </div>
+
+    <div class="container" id="shopee-list">
+        </div>
+
+</div> <div class="bottom-nav">
+    <a href="#" class="nav-link active"><img src="https://img.icons8.com/material-rounded/48/ee4d2d/home.png"><br>Gợi ý</a>
+    <a href="https://zalo.me/SỐ_ZALO" class="nav-link"><img src="https://img.icons8.com/color/48/zalo.png"><br>Zalo Admin</a>
+    <a href="https://t.me/ID_TELEGRAM" class="nav-link"><img src="https://img.icons8.com/color/48/telegram-app.png"><br>Telegram</a>
+</div>
+
+<script>
+    // Link tới file Google Sheets của bạn
+    const SHEET_ID = '13gdK5FZ0yX01Z7mDYhV975us9l89oFx_GFVw8moyfjg'; 
+    const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+    fetch(URL).then(res => res.text()).then(data => {
+        const json = JSON.parse(data.substr(47).slice(0, -2));
+        const rows = json.table.rows;
+        let html = '';
+        
+        rows.forEach(row => {
+            let soldPercent = Math.floor(Math.random() * 30) + 70; 
+            
+            // LẤY DỮ LIỆU TỪ EXCEL THEO ĐÚNG CỘT
+            let gameCategory = row.c[0]?.v || '';       // Cột A: Tên Game (để lọc)
+            let productName = row.c[1]?.v || gameCategory; // Cột B: Tên sản phẩm
+            let linkTai = row.c[2]?.v || '#';           // Cột C: Link tải
+            let linkAnh = row.c[3]?.v || 'https://via.placeholder.com/200'; // Cột D: Ảnh
+            let luotTai = row.c[4]?.v || '0';           // Cột E: Lượt tải
+            
+            html += `
+            <div class="card" data-game="${gameCategory}" onclick="window.open('${linkTai}', '_blank')">
+                <div class="badge-fav">Yêu thích</div>
+                <img src="${linkAnh}" alt="Item">
+                <div class="info">
+                    <div class="title">${productName}</div>
+                    <div class="price-row">
+                        <span class="price">đ0</span>
+                        <span class="old-price">đ199k</span>
+                    </div>
+                    <button class="btn-download">TẢI XUỐNG FREE</button>
+                    <div class="sold-bar">
+                        <div class="sold-fill" style="width: ${soldPercent}%"></div>
+                        <div class="sold-text">ĐANG CHÁY HÀNG</div>
+                    </div>
+                    <div style="font-size: 9px; color: #999; margin-top: 8px; text-align: center;">⬇ ${luotTai} lượt tải</div>
+                </div>
+            </div>`;
+        });
+        
+        document.getElementById('shopee-list').innerHTML = html;
+    });
+
+    // Hàm Xử lý Bộ Lọc (So sánh data-game với nút được bấm)
+    function filterCategory(name, element) {
+        // Cập nhật trạng thái nút bấm
+        document.querySelectorAll('.cat-item').forEach(item => item.classList.remove('active'));
+        element.classList.add('active');
+
+        // Quét và lọc thẻ sản phẩm
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            const gameAttr = card.getAttribute('data-game').toLowerCase();
+            if (name === 'all' || gameAttr.includes(name.toLowerCase())) {
+                card.style.display = "flex"; 
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
