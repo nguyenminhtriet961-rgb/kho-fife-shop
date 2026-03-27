@@ -229,66 +229,53 @@
     <a href="https://www.facebook.com/nguyen.minh.triet.71039" class="nav-link"><img src="https://tse1.mm.bing.net/th/id/OIP.z3JWNGeUG9UnBuErrriUqwHaE8?pid=Api&P=0&h=220"><br>Facebook</a>
 </div>
 
-<script>
-    // Link tới file Google Sheets của bạn
+ 
+    <script>
+    // Link tới file Google Sheets
     const SHEET_ID = '13gdK5FZ0yX01Z7mDYhV975us9l89oFx_GFVw8moyfjg'; 
     const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
-    fetch(URL).then(res => res.text()).then(data => {
-        const json = JSON.parse(data.substr(47).slice(0, -2));
-        const rows = json.table.rows;s
-        let html = '';
-        
-        rows.forEach(row => {
-            let soldPercent = Math.floor(Math.random() * 30) + 70; 
+    fetch(URL)
+        .then(res => res.text())
+        .then(data => {
+            // Fix lỗi cú pháp tại đây
+            const json = JSON.parse(data.substr(47).slice(0, -2));
+            const rows = json.table.rows; // Đã xóa chữ 's' thừa
+            let html = '';
             
-            // LẤY DỮ LIỆU TỪ EXCEL THEO ĐÚNG CỘT
-            let gameCategory = row.c[0]?.v || '';       // Cột A: Tên Game (để lọc)
-            let productName = row.c[1]?.v || gameCategory; // Cột B: Tên sản phẩm
-            let linkTai = row.c[2]?.v || '#';           // Cột C: Link tải
-            let linkAnh = row.c[3]?.v || 'https://via.placeholder.com/200'; // Cột D: Ảnh
-            let luotTai = row.c[4]?.v || '0';           // Cột E: Lượt tải
-            
-            html += `
-            <div class="card" data-game="${gameCategory}" onclick="window.open('${linkTai}', '_blank')">
-                <div class="badge-fav">Yêu thích</div>
-                <img src="${linkAnh}" alt="Item">
-                <div class="info">
-                    <div class="title">${productName}</div>
-                    <div class="price-row">
-                        <span class="price">đ0</span>
-                        <span class="old-price">đ199k</span>
+            rows.forEach(row => {
+                let soldPercent = Math.floor(Math.random() * 30) + 70; 
+                let gameCategory = row.c[0]?.v || '';       
+                let productName = row.c[1]?.v || gameCategory; 
+                let linkTai = row.c[2]?.v || '#';           
+                let linkAnh = row.c[3]?.v || 'https://via.placeholder.com/200'; 
+                let luotTai = row.c[4]?.v || '0';           
+                
+                html += `
+                <div class="card" data-game="${gameCategory}" onclick="window.open('${linkTai}', '_blank')">
+                    <div class="badge-fav">Yêu thích</div>
+                    <img src="${linkAnh}" alt="Item">
+                    <div class="info">
+                        <div class="title">${productName}</div>
+                        <div class="price-row">
+                            <span class="price">đ0</span>
+                            <span class="old-price">đ199k</span>
+                        </div>
+                        <button class="btn-download">TẢI XUỐNG FREE</button>
+                        <div class="sold-bar">
+                            <div class="sold-fill" style="width: ${soldPercent}%"></div>
+                            <div class="sold-text">ĐANG CHÁY HÀNG</div>
+                        </div>
+                        <div style="font-size: 9px; color: #999; margin-top: 8px; text-align: center;">⬇ ${luotTai} lượt tải</div>
                     </div>
-                    <button class="btn-download">TẢI XUỐNG FREE</button>
-                    <div class="sold-bar">
-                        <div class="sold-fill" style="width: ${soldPercent}%"></div>
-                        <div class="sold-text">ĐANG CHÁY HÀNG</div>
-                    </div>
-                    <div style="font-size: 9px; color: #999; margin-top: 8px; text-align: center;">⬇ ${luotTai} lượt tải</div>
-                </div>
-            </div>`;
+                </div>`;
+            });
+            document.getElementById('shopee-list').innerHTML = html;
+        })
+        .catch(err => {
+            console.error("Lỗi lấy dữ liệu:", err);
+            document.getElementById('shopee-list').innerHTML = "<p style='text-align:center; padding:20px;'>Không thể tải dữ liệu. Vui lòng kiểm tra mạng!</p>";
         });
-        
-        document.getElementById('shopee-list').innerHTML = html;
-    });
-
-    // Hàm Xử lý Bộ Lọc (So sánh data-game với nút được bấm)
-    function filterCategory(name, element) {
-        // Cập nhật trạng thái nút bấm
-        document.querySelectorAll('.cat-item').forEach(item => item.classList.remove('active'));
-        element.classList.add('active');
-
-        // Quét và lọc thẻ sản phẩm
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            const gameAttr = card.getAttribute('data-game').toLowerCase();
-            if (name === 'all' || gameAttr.includes(name.toLowerCase())) {
-                card.style.display = "flex"; 
-            } else {
-                card.style.display = "none";
-            }
-        });
-    }
 </script>
 
 </body>
