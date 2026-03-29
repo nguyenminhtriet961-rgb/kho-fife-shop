@@ -9,67 +9,130 @@
         body { background-color: #e9ecef; margin: 0; font-family: 'Roboto', sans-serif; }
         .app-wrapper { max-width: 480px; margin: 0 auto; background-color: #f5f5f5; min-height: 100vh; position: relative; padding-bottom: 80px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         
-        /* HEADER */
+        /* HEADER & CLOCK */
         .header { background: linear-gradient(90deg, #2b1055, #ee4d2d); padding: 15px; color: white; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .cart-icon { position: relative; font-size: 24px; cursor: pointer; }
         .cart-count { position: absolute; top: -5px; right: -10px; background: #fff; color: #ee4d2d; font-size: 12px; font-weight: bold; border-radius: 50%; padding: 2px 6px; }
+        .clock-bar { background: #111; color: #00ff00; text-align: center; padding: 6px; font-size: 12px; font-weight: bold; border-bottom: 2px solid #ee4d2d; font-family: monospace; }
 
         /* SEARCH & FILTERS */
         .search-bar { padding: 10px; background: #fff; }
         .search-bar input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; outline: none; box-sizing: border-box; }
         .os-filters { display: flex; gap: 8px; padding: 10px; overflow-x: auto; background: #fff; border-bottom: 1px solid #eee; }
-        .os-btn { padding: 6px 12px; background: #f0f0f0; border-radius: 15px; font-size: 12px; cursor: pointer; white-space: nowrap; border: none; }
-        .os-btn.active { background: #ee4d2d; color: white; }
+        .os-btn { padding: 6px 15px; background: #f0f0f0; border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap; border: 1px solid #ddd; transition: 0.3s; }
+        .os-btn.active { background: #ee4d2d; color: white; border-color: #ee4d2d; }
 
-        /* CATEGORIES (Đã bổ sung FULL GAME) */
-        .categories { display: flex; overflow-x: auto; padding: 10px; gap: 15px; background: #fff; }
-        /* Ẩn thanh cuộn cho mượt nhưng vẫn cuộn được ngang */
+        /* MOD THỊNH HÀNH (TOP 10 DOWNLOADS) */
+        .section-title { padding: 10px 15px 5px; font-weight: bold; color: #ee4d2d; display: flex; align-items: center; gap: 5px; font-size: 14px; }
+        .hot-scroll { display: flex; overflow-x: auto; padding: 0 10px 15px; gap: 12px; scrollbar-width: none; }
+        .hot-scroll::-webkit-scrollbar { display: none; }
+        .hot-item { min-width: 130px; background: white; border-radius: 10px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; border: 1px solid #ffdecb; }
+        .badge-hot { position: absolute; top: 5px; right: 5px; background: red; color: white; font-size: 9px; padding: 2px 5px; border-radius: 4px; font-weight: bold; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .hot-item img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; }
+        .hot-item p { margin: 5px 0 2px; font-size: 12px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .hot-dl-count { font-size: 10px; color: #777; display: flex; align-items: center; gap: 3px; }
+
+        /* CATEGORIES */
+        .categories { display: flex; overflow-x: auto; padding: 10px; gap: 15px; background: #fff; scrollbar-width: none; }
         .categories::-webkit-scrollbar { display: none; }
-        .categories { -ms-overflow-style: none; scrollbar-width: none; }
         .cat-item { flex: 0 0 auto; text-align: center; cursor: pointer; opacity: 0.6; width: 65px; }
         .cat-item.active { opacity: 1; font-weight: bold; color: #ee4d2d; }
         .cat-item img { width: 40px; height: 40px; border-radius: 8px; }
         .cat-item span { font-size: 10px; display: block; margin-top: 3px; }
 
-        /* CARD SẢN PHẨM */
-        .card { display: flex; background: #fff; margin: 8px; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .card img { width: 120px; height: 120px; object-fit: cover; }
+        /* GRID SẢN PHẨM CHÍNH */
+        .product-list { padding-top: 5px; }
+        .card { display: flex; background: #fff; margin: 8px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .card img { width: 110px; height: 110px; object-fit: cover; }
         .info { padding: 10px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .title { font-size: 14px; font-weight: bold; color: #333; line-height: 1.2; height: 34px; overflow: hidden; }
         .date-os { font-size: 10px; color: #888; margin: 4px 0; }
         .btn-row { display: flex; gap: 5px; margin-top: 5px; }
-        .btn-add { background: #ff9800; color: white; border: none; padding: 6px; border-radius: 3px; font-size: 11px; flex: 1; cursor: pointer; }
-        .btn-dl { background: #ee4d2d; color: white; border: none; padding: 6px; border-radius: 3px; font-size: 11px; flex: 1; cursor: pointer; }
-        
-        .sold-bar { background: #ffbd91; height: 14px; border-radius: 10px; position: relative; margin-top: 5px; overflow: hidden; }
-        .sold-fill { background: linear-gradient(90deg, #ff5722, #ff9800); height: 100%; }
-        .sold-text { position: absolute; width: 100%; text-align: center; font-size: 9px; color: white; font-weight: bold; line-height: 14px; top: 0; }
+        .btn-add { background: #ff9800; color: white; border: none; padding: 7px; border-radius: 4px; font-size: 11px; flex: 1; cursor: pointer; font-weight: bold; }
+        .btn-dl { background: #ee4d2d; color: white; border: none; padding: 7px; border-radius: 4px; font-size: 11px; flex: 1; cursor: pointer; font-weight: bold; }
 
-        /* GIỎ HÀNG POPUP */
+        /* WELCOME POPUP */
+        .overlay-popup { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-popup { background: white; width: 85%; max-width: 380px; border-radius: 15px; overflow: hidden; text-align: center; border: 2px solid #ee4d2d; animation: zoomIn 0.3s ease; }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-header { background: #ee4d2d; color: white; padding: 12px; font-weight: bold; font-size: 16px; }
+        .modal-body { padding: 15px; font-size: 13px; line-height: 1.5; color: #333; }
+        .modal-img-container { background: #f0f0f0; border: 2px dashed #bbb; margin: 10px 0; border-radius: 10px; padding: 5px; }
+        .modal-img-container img { width: 100%; border-radius: 8px; display: block; }
+        .btn-close-popup { background: linear-gradient(90deg, #2b1055, #ee4d2d); color: white; border: none; padding: 12px; width: 80%; border-radius: 25px; margin: 15px 0; font-weight: bold; cursor: pointer; }
+
+        /* GIỎ HÀNG & PROFILE POPUP */
         .cart-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
-        .cart-modal { background: #fff; border-radius: 12px; width: 85%; max-width: 400px; max-height: 70vh; display: flex; flex-direction: column; position: relative; }
+        .cart-modal { background: #fff; border-radius: 12px; width: 85%; max-width: 400px; max-height: 75vh; display: flex; flex-direction: column; position: relative; }
         .cart-modal-header { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .close-btn { font-size: 26px; cursor: pointer; color: #999; font-weight: bold; }
         .cart-content { padding: 15px; overflow-y: auto; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f2f2f2; }
         .btn-vượt { background: #2b1055; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+  /* BOTTOM MENU */
 
-        /* BOTTOM MENU */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eee; max-width: 480px; margin: 0 auto; z-index: 100; }
+
         .nav-item { text-align: center; color: #555; font-size: 11px; text-decoration: none; width: 25%; }
+
         .nav-item img { width: 22px; height: 22px; margin-bottom: 2px; }
+
         .nav-item.active { color: #ee4d2d; font-weight: bold; }
+
+        .overlay-popup {
+
+    position: fixed;
+
+    top: 0; left: 0; right: 0; bottom: 0;
+
+    background: rgba(0,0,0,0.9);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 9999;
+
+}
+         
     </style>
 </head>
 <body>
+<div id="popup-1" class="overlay-popup">
+    <div class="modal-popup" style="border-color: #2b1055;">
+        <div class="modal-header" style="background: #2b1055;">🎁 QUÀ TẶNG / SỰ KIỆN</div>
+        <div class="modal-body">
+            <img src="image_6.png" style="width: 100%; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/350x450?text=BANNER+SỰ+KIỆN+MỚI'">
+        </div>
+        <button class="btn-close-popup" style="background: #2b1055;" onclick="nextPopup()">XEM HƯỚNG DẪN LẤY KEY</button>
+    </div>
+</div>
 
-<div class="app-wrapper">
+<div id="popup-2" class="overlay-popup" style="display: none;">
+    <div class="modal-popup">
+        <div class="modal-header">🔑 HƯỚNG DẪN NHẬN KEY</div>
+        <div class="modal-body">
+            <b style="color: red;">BẤM VÀO HÌNH GIỐNG TRONG ẢNH ĐỂ NHẬN KEY!!!</b><br><br>
+            Cú pháp: <b>("TÊN FILE HACK" KEY 1)</b>
+            <div class="modal-img-container">
+                <img src="image_7.png" onerror="this.src='https://via.placeholder.com/300x150?text=ANH+HUONG+DAN+LAY+KEY'">
+            </div>
+            <small>NẾU QUÁ 30p Không nhận được key liên hệ admin!</small>
+        </div>
+        <button class="btn-close-popup" onclick="closeAllPopups()">ĐÃ HIỂU & VÀO CỬA HÀNG</button>
+    </div>
+</div>
+
     <div class="header">
         <div style="font-weight: bold; font-size: 18px;">MTRIET STORE</div>
         <div class="cart-icon" onclick="openCart()">
             🛒 <span class="cart-count" id="cart-count">0</span>
         </div>
     </div>
+    <div class="clock-bar" id="live-clock">Đang tải thời gian...</div>
 
     <div class="search-bar">
         <input type="text" id="searchInput" onkeyup="runFilters()" placeholder="Tìm kiếm mod, game, script...">
@@ -79,8 +142,12 @@
         <button class="os-btn active" onclick="setOS('All', this)">Tất cả</button>
         <button class="os-btn" onclick="setOS('Android', this)">Android</button>
         <button class="os-btn" onclick="setOS('iOS', this)">iOS</button>
-        <button class="os-btn" onclick="setOS('Windows', this)">PC</button>
+        <button class="os-btn" onclick="setOS('Windows', this)">PC/Windows</button>
     </div>
+
+    <div class="section-title">🔥 XU HƯỚNG THỊNH HÀNH</div>
+    <div id="hot-list" class="hot-scroll">
+        </div>
 
     <div class="categories">
         <div class="cat-item active" onclick="setGame('all', this)">
@@ -104,19 +171,13 @@
         <div class="cat-item" onclick="setGame('Together', this)">
             <img src="https://th.bing.com/th/id/OIP.RO3Kgey_DU_j2bcRZsZNsgHaHa?w=146&h=180&c=7&r=0&o=7&dpr=1.8&pid=1.7&rm=3"><span>Together</span>
         </div>
-        <div class="cat-item" onclick="setGame('FC Mobile', this)">
-            <img src="https://th.bing.com/th/id/OIF.EIpe85953YBiBdHqsXmdNw?w=277&h=180&c=7&r=0&o=7&dpr=1.8&pid=1.7&rm=3"><span>FC Mobile</span>
-        </div>
-        <div class="cat-item" onclick="setGame('Crossfire', this)">
-            <img src="https://th.bing.com/th/id/OIP.WL4aVuzLdt0fxjFs1VCeZAHaHa?w=145&h=180&c=7&r=0&o=7&dpr=1.8&pid=1.7&rm=3"><span>Crossfire</span>
-        </div>
         <div class="cat-item" onclick="setGame('Minecraft', this)">
-            <img src="https://th.bing.com/th?id=OIF.07FG2F5XwA%2f3femqk%2fR8Cw&w=182&h=182&c=7&r=0&o=7&dpr=1.8&pid=1.7&rm=3"><span>Minecraft</span>
+            <img src="https://th.bing.com/th/id/OIP.Lw7cquJss153eaY0X2h5nQHaEK?w=323&h=182&c=7&r=0&o=7&dpr=1.8&pid=1.7&rm=3"><span>Minecraft</span>
         </div>
     </div>
 
-    <div id="product-list">
-        <p style="text-align:center; padding:20px;">Đang tải dữ liệu...</p>
+    <div id="product-list" class="product-list">
+        <p style="text-align:center; padding:40px; color:#999;">Đang kết nối dữ liệu Store...</p>
     </div>
 
     <div class="bottom-nav">
@@ -130,8 +191,8 @@
             <img src="https://img.icons8.com/color/48/facebook-new.png"><br>Facebook
         </a>
        <a href="javascript:void(0)" onclick="openProfile()" class="nav-item">
-    <img src="https://img.icons8.com/fluency/48/user-male-circle.png"><br>Tôi
-</a>
+            <img src="https://img.icons8.com/fluency/48/user-male-circle.png"><br>Tôi
+        </a>
     </div>
 </div>
 
@@ -141,74 +202,89 @@
             <span style="font-weight:bold; font-size:16px;">Giỏ hàng (Pass Link)</span>
             <span class="close-btn" onclick="closeCart()">×</span>
         </div>
-        <div class="cart-content" id="cartContent">
-            </div>
+        <div class="cart-content" id="cartContent"></div>
     </div>
 </div>
+
 <div class="cart-overlay" id="profileOverlay" onclick="if(event.target == this) closeProfile()">
     <div class="cart-modal" style="text-align: center; padding-bottom: 20px;">
         <div class="cart-modal-header" style="justify-content: flex-end; border-bottom: none;">
             <span class="close-btn" onclick="closeProfile()">×</span>
         </div>
         <img src="https://img.icons8.com/fluency/96/user-male-circle.png" style="width: 80px; margin-top: -30px; background: #fff; border-radius: 50%; border: 3px solid #ee4d2d; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-        
         <h3 style="margin: 10px 0 5px 0; color: #2b1055; font-size: 18px;">NGUYỄN MINH TRIẾT</h3>
-        <p style="color: #ee4d2d; font-weight: bold; font-size: 13px; margin: 0 0 15px 0;">✔ Sinh viên IT Năm 4 - Software Engineer</p>
-        
-        <div style="text-align: left; padding: 0 20px; font-size: 13px; line-height: 1.6; color: #555;">
-            <p>🔹 <b>Chuyên môn:</b> Lập trình Web, Reverse Engineering & Modding Game.</p>
-            <p>🔹 <b>Kinh nghiệm:</b> Hơn 4 năm thực chiến xử lý các hệ thống Script và Bypass.</p>
-            <p>🔹 <b>Cam kết:</b> Founder <b>MTRIET STORE</b>. 100% file tải xuống đã được mã hóa và quét sạch virus. Uy tín tạo nên thương hiệu.</p>
+        <p style="color: #ee4d2d; font-weight: bold; font-size: 12px; margin: 0 0 15px 0;">✔ Sinh viên IT - Software Engineer</p>
+        <div style="text-align: left; padding: 0 20px; font-size: 12px; line-height: 1.6; color: #555;">
+            <p>🔹 <b>Chuyên môn:</b> Lập trình Web & Modding Game.</p>
+            <p>🔹 <b>Founder:</b> MTRIET STORE - Uy tín tạo thương hiệu.</p>
         </div>
-        
-        <button onclick="window.open(' https://zalo.me/84383539399' ) " style="background: linear-gradient(90deg, #2b1055, #ee4d2d); color: #fff; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; font-size: 12px; margin-top: 15px; cursor: pointer;">
-            💬 LIÊN HỆ CÔNG VIỆC
-        </button>
+        <button onclick="window.open('https://zalo.me/84383539399')" style="background: linear-gradient(90deg, #2b1055, #ee4d2d); color: #fff; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; font-size: 11px; margin-top: 15px; cursor: pointer;">💬 LIÊN HỆ CÔNG VIỆC</button>
     </div>
 </div>
+
 <script>
     const SHEET_ID = '13gdK5FZ0yX01Z7mDYhV975us9l89oFx_GFVw8moyfjg';
     const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
+    let allData = [];
     let cart = JSON.parse(localStorage.getItem('mtriet_cart_v2')) || [];
     let currentOS = 'All';
     let currentGame = 'all';
 
-    function updateBadge() { document.getElementById('cart-count').innerText = cart.length; }
-    updateBadge();
+    // 1. CẬP NHẬT ĐỒNG HỒ THỰC
+    function updateClock() {
+        const now = new Date();
+        const days = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+        const dayStr = days[now.getDay()];
+        const timeStr = now.toLocaleTimeString('vi-VN');
+        const dateStr = now.toLocaleDateString('vi-VN');
+        document.getElementById('live-clock').innerText = `🕒 ${dayStr}, ${dateStr} - ${timeStr}`;
+    }
+    setInterval(updateClock, 1000);
 
-    fetch(G_URL).then(res => res.text()).then(data => {
-        const json = JSON.parse(data.substr(47).slice(0, -2));
-        const rows = json.table.rows;
-        let html = '';
-        rows.forEach(row => {
-            let game = row.c[0]?.v || '';
-            let name = row.c[1]?.v || 'No Name';
-            let link = row.c[2]?.v || '#'; 
-            let img = row.c[3]?.v || 'https://via.placeholder.com/150';
-            let update = row.c[5]?.v || 'Vừa xong';
-            let os = row.c[6]?.v || 'Android';
+    // 2. FETCH DỮ LIỆU TỪ GOOGLE SHEET
+    async function loadData() {
+        try {
+            const res = await fetch(G_URL);
+            const text = await res.text();
+            const json = JSON.parse(text.substr(47).slice(0, -2));
+            const rows = json.table.rows;
 
-            html += `
-            <div class="card" data-game="${game}" data-os="${os}" data-name="${name}">
-                <img src="${img}">
-                <div class="info">
-                    <div class="title">${name}</div>
-                    <div class="date-os">📅 ${update} | 📱 ${os}</div>
-                    <div class="btn-row">
-                        <button class="btn-add" onclick="addCart('${name}','${link}')">🛒 Giỏ</button>
-                        <button class="btn-dl" onclick="window.open('${link}')">Tải ngay</button>
-                    </div>
-                    <div class="sold-bar">
-                        <div class="sold-fill" style="width: ${Math.floor(Math.random() * 40) + 60}%"></div>
-                        <div class="sold-text">ĐANG CHÁY HÀNG</div>
-                    </div>
-                </div>
-            </div>`;
-        });
-        document.getElementById('product-list').innerHTML = html;
-    });
+            allData = rows.map(row => ({
+                game: row.c[0]?.v || '',
+                name: row.c[1]?.v || 'No Name',
+                link: row.c[2]?.v || '#',
+                img: row.c[3]?.v || 'https://via.placeholder.com/150',
+                downloads: parseInt(row.c[4]?.v) || 0, // CỘT LƯỢT TẢI
+                update: row.c[5]?.v || 'Vừa xong',
+                os: row.c[6]?.v || 'Android'
+            }));
 
+            renderHotMods();
+            runFilters();
+        } catch (e) {
+            console.error("Lỗi kết nối Sheet:", e);
+            document.getElementById('product-list').innerHTML = "<p style='text-align:center;'>Không thể tải dữ liệu. Vui lòng kiểm tra link Sheet!</p>";
+        }
+    }
+
+    // 3. RENDER TOP 10 MOD THỊNH HÀNH
+    function renderHotMods() {
+        // Sắp xếp theo downloads giảm dần, lấy 10 cái đầu
+        const hotItems = [...allData].sort((a, b) => b.downloads - a.downloads).slice(0, 10);
+        const container = document.getElementById('hot-list');
+        
+        container.innerHTML = hotItems.map(item => `
+            <div class="hot-item" onclick="window.open('${item.link}')">
+                <div class="badge-hot">🔥 TOP</div>
+                <img src="${item.img}" onerror="this.src='https://via.placeholder.com/150'">
+                <p>${item.name}</p>
+                <div class="hot-dl-count">📊 ${item.downloads.toLocaleString()} lượt tải</div>
+            </div>
+        `).join('');
+    }
+
+    // 4. BỘ LỌC TỔNG HỢP (OS, GAME, SEARCH)
     function setOS(val, el) {
         currentOS = val;
         document.querySelectorAll('.os-btn').forEach(b => b.classList.remove('active'));
@@ -224,15 +300,45 @@
     }
 
     function runFilters() {
-        let s = document.getElementById('searchInput').value.toLowerCase();
-        document.querySelectorAll('.card').forEach(c => {
-            let matchOS = (currentOS === 'All' || c.dataset.os.includes(currentOS));
-            let matchGame = (currentGame === 'all' || c.dataset.game.includes(currentGame));
-            let matchSearch = c.dataset.name.toLowerCase().includes(s);
-            c.style.display = (matchOS && matchGame && matchSearch) ? "flex" : "none";
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = allData.filter(item => {
+            const matchSearch = item.name.toLowerCase().includes(search);
+            const matchGame = (currentGame === 'all' || item.game.includes(currentGame));
+            
+            // Logic lọc OS thông minh (PC khớp với Windows)a
+            let matchOS = false;
+            if (currentOS === 'All') matchOS = true;
+            else if (currentOS === 'Windows' && (item.os.includes('PC') || item.os.includes('Windows'))) matchOS = true;
+            else if (item.os.includes(currentOS)) matchOS = true;
+
+            return matchSearch && matchGame && matchOS;
         });
+
+        renderGrid(filtered);
     }
 
+    function renderGrid(data) {
+        const grid = document.getElementById('product-list');
+        if (data.length === 0) {
+            grid.innerHTML = "<p style='text-align:center; padding:20px;'>Không tìm thấy Mod phù hợp!</p>";
+            return;
+        }
+        grid.innerHTML = data.map(item => `
+            <div class="card">
+                <img src="${item.img}" onerror="this.src='https://via.placeholder.com/150'">
+                <div class="info">
+                    <div class="title">${item.name}</div>
+                    <div class="date-os">📅 ${item.update} | 📱 ${item.os}</div>
+                    <div class="btn-row">
+                        <button class="btn-add" onclick="addCart('${item.name}','${item.link}')">🛒 Giỏ</button>
+                        <button class="btn-dl" onclick="window.open('${item.link}')">Tải ngay</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 5. GIỎ HÀNG & PROFILE (GIỮ LOGIC CỦA ÔNG)
     function addCart(n, l) {
         if(!cart.find(i => i.name === n)) {
             cart.push({name: n, link: l}); 
@@ -240,10 +346,11 @@
             updateBadge();
             alert("Đã thêm vào giỏ!");
         } else {
-            alert("Đã có trong giỏ hàng!");
+            alert("Sản phẩm đã có trong giỏ!");
         }
     }
 
+    function updateBadge() { document.getElementById('cart-count').innerText = cart.length; }
     function openCart() {
         let cont = document.getElementById('cartContent');
         if(cart.length === 0) { alert("Giỏ hàng đang trống!"); return; }
@@ -258,18 +365,47 @@
         `).join('');
         document.getElementById('cartOverlay').style.display = 'flex';
     }
-
     function closeCart() { document.getElementById('cartOverlay').style.display = 'none'; }
-
     function removeItem(idx) {
         cart.splice(idx, 1);
         localStorage.setItem('mtriet_cart_v2', JSON.stringify(cart));
         updateBadge();
         if(cart.length === 0) closeCart(); else openCart();
     }
-    // Hàm mở và đóng Profile Admin
-function openProfile() { document.getElementById('profileOverlay').style.display = 'flex'; }
-function closeProfile() { document.getElementById('profileOverlay').style.display = 'none'; }
+    function closePopup() { document.getElementById('welcome-popup').style.display = 'none'; }
+    function openProfile() { document.getElementById('profileOverlay').style.display = 'flex'; }
+    function closeProfile() { document.getElementById('profileOverlay').style.display = 'none'; }
+
+    window.onload = () => {
+        loadData();
+        updateClock();
+        updateBadge();
+    };
+    // Hàm chuyển từ Popup 1 sang Popup 2
+function nextPopup() {
+    document.getElementById('popup-1').style.display = 'none';
+    document.getElementById('popup-2').style.display = 'flex';
+}
+
+// Hàm đóng toàn bộ để vào web
+function closeAllPopups() {
+    document.getElementById('popup-2').style.display = 'none';
+    // Lưu trạng thái đã xem vào session để không hiện lại mỗi khi chuyển trang (tùy chọn)
+    sessionStorage.setItem('viewed_popup', 'true');
+}
+
+// Kiểm tra khi load trang
+window.onload = () => {
+    // Nếu chưa xem popup trong phiên làm việc này thì hiện
+    if (!sessionStorage.getItem('viewed_popup')) {
+        document.getElementById('popup-1').style.display = 'flex';
+    } else {
+        document.getElementById('popup-1').style.display = 'none';
+    }
+    loadData();
+    updateClock();
+    updateBadge();
+};
 </script>
 </body>
 </html>
