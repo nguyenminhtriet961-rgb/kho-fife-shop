@@ -2,461 +2,114 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MTRIET STORE | GAME GÌ CŨNG CÓ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đếm ngược cập nhật App</title>
     <style>
-        body { background-color: #e9ecef; margin: 0; font-family: 'Roboto', sans-serif; }
-        .app-wrapper { max-width: 480px; margin: 0 auto; background-color: #f5f5f5; min-height: 100vh; position: relative; padding-bottom: 80px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        
-        /* HEADER & CLOCK */
-        .header { background: linear-gradient(90deg, #2b1055, #ee4d2d); padding: 15px; color: white; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .cart-icon { position: relative; font-size: 24px; cursor: pointer; }
-        .cart-count { position: absolute; top: -5px; right: -10px; background: #fff; color: #ee4d2d; font-size: 12px; font-weight: bold; border-radius: 50%; padding: 2px 6px; }
-        .clock-bar { background: #111; color: #00ff00; text-align: center; padding: 6px; font-size: 12px; font-weight: bold; border-bottom: 2px solid #ee4d2d; font-family: monospace; }
-
-        /* SEARCH & FILTERS */
-        .search-bar { padding: 10px; background: #fff; }
-        .search-bar input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; outline: none; box-sizing: border-box; }
-        .os-filters { display: flex; gap: 8px; padding: 10px; overflow-x: auto; background: #fff; border-bottom: 1px solid #eee; }
-        .os-btn { padding: 6px 15px; background: #f0f0f0; border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap; border: 1px solid #ddd; transition: 0.3s; }
-        .os-btn.active { background: #ee4d2d; color: white; border-color: #ee4d2d; }
-
-        /* MOD THỊNH HÀNH (TOP 10 DOWNLOADS) */
-        .section-title { padding: 10px 15px 5px; font-weight: bold; color: #ee4d2d; display: flex; align-items: center; gap: 5px; font-size: 14px; }
-        .hot-scroll { display: flex; overflow-x: auto; padding: 0 10px 15px; gap: 12px; scrollbar-width: none; }
-        .hot-scroll::-webkit-scrollbar { display: none; }
-        .hot-item { min-width: 130px; background: white; border-radius: 10px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; border: 1px solid #ffdecb; }
-        .badge-hot { position: absolute; top: 5px; right: 5px; background: red; color: white; font-size: 9px; padding: 2px 5px; border-radius: 4px; font-weight: bold; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        .hot-item img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; }
-        .hot-item p { margin: 5px 0 2px; font-size: 12px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .hot-dl-count { font-size: 10px; color: #777; display: flex; align-items: center; gap: 3px; }
-
-        /* CATEGORIES */
-        .categories { display: flex; overflow-x: auto; padding: 10px; gap: 15px; background: #fff; scrollbar-width: none; }
-        .categories::-webkit-scrollbar { display: none; }
-        .cat-item { flex: 0 0 auto; text-align: center; cursor: pointer; opacity: 0.6; width: 65px; }
-        .cat-item.active { opacity: 1; font-weight: bold; color: #ee4d2d; }
-        .cat-item img { width: 40px; height: 40px; border-radius: 8px; }
-        .cat-item span { font-size: 10px; display: block; margin-top: 3px; }
-
-        /* GRID SẢN PHẨM CHÍNH */
-        .product-list { padding-top: 5px; }
-        .card { display: flex; background: #fff; margin: 8px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .card img { width: 110px; height: 110px; object-fit: cover; }
-        .info { padding: 10px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .title { font-size: 14px; font-weight: bold; color: #333; line-height: 1.2; height: 34px; overflow: hidden; }
-        .date-os { font-size: 10px; color: #888; margin: 4px 0; }
-        .btn-row { display: flex; gap: 5px; margin-top: 5px; }
-        .btn-add { background: #ff9800; color: white; border: none; padding: 7px; border-radius: 4px; font-size: 11px; flex: 1; cursor: pointer; font-weight: bold; }
-        .btn-dl { background: #ee4d2d; color: white; border: none; padding: 7px; border-radius: 4px; font-size: 11px; flex: 1; cursor: pointer; font-weight: bold; }
-
-        /* WELCOME POPUP */
-        .overlay-popup { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 2000; }
-        .modal-popup { background: white; width: 85%; max-width: 380px; border-radius: 15px; overflow: hidden; text-align: center; border: 2px solid #ee4d2d; animation: zoomIn 0.3s ease; }
-        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-header { background: #ee4d2d; color: white; padding: 12px; font-weight: bold; font-size: 16px; }
-        .modal-body { padding: 15px; font-size: 13px; line-height: 1.5; color: #333; }
-        .modal-img-container { background: #f0f0f0; border: 2px dashed #bbb; margin: 10px 0; border-radius: 10px; padding: 5px; }
-        .modal-img-container img { width: 100%; border-radius: 8px; display: block; }
-        .btn-close-popup { background: linear-gradient(90deg, #2b1055, #ee4d2d); color: white; border: none; padding: 12px; width: 80%; border-radius: 25px; margin: 15px 0; font-weight: bold; cursor: pointer; }
-
-        /* GIỎ HÀNG & PROFILE POPUP */
-        .cart-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
-        .cart-modal { background: #fff; border-radius: 12px; width: 85%; max-width: 400px; max-height: 75vh; display: flex; flex-direction: column; position: relative; }
-        .cart-modal-header { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .close-btn { font-size: 26px; cursor: pointer; color: #999; font-weight: bold; }
-        .cart-content { padding: 15px; overflow-y: auto; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f2f2f2; }
-        .btn-vượt { background: #2b1055; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; }
-        
-        /* BOTTOM MENU */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eee; max-width: 480px; margin: 0 auto; z-index: 100; }
-        .nav-item { text-align: center; color: #555; font-size: 11px; text-decoration: none; width: 25%; }
-        .nav-item img { width: 22px; height: 22px; margin-bottom: 2px; }
-        .nav-item.active { color: #ee4d2d; font-weight: bold; }
-
-        /* === MÀN HÌNH BẢO TRÌ BẮT BUỘC (MAINTENANCE) === */
-        #maintenance-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #111, #2b1055);
-            color: white; z-index: 99999; /* Đè lên tất cả các popups */
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: #ffffff;
         }
-        #maintenance-overlay h2 { color: #ee4d2d; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .maintenance-countdown {
-            font-size: 28px; font-weight: bold; letter-spacing: 2px;
-            background: rgba(0, 0, 0, 0.5); padding: 20px 30px; border-radius: 12px;
-            border: 2px solid #ee4d2d; margin: 20px 0;
-            box-shadow: 0 0 20px rgba(238, 77, 45, 0.3); font-family: monospace;
+        .container {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 15px;
+            background: #2d2d2d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .secret-admin-trigger {
-            position: absolute; bottom: 0; right: 0;
-            width: 60px; height: 60px; cursor: default; z-index: 100000;
+        h1 { margin-bottom: 20px; font-weight: 300; }
+        #countdown {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
         }
+        .time-box {
+            background: #444;
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 70px;
+        }
+        .time-box span {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        .label { font-size: 0.8rem; text-transform: uppercase; margin-top: 5px; }
+        #status { margin-top: 25px; font-style: italic; color: #aaa; }
     </style>
 </head>
 <body>
 
-<div id="maintenance-overlay">
-    <img src="https://img.icons8.com/fluent/96/000000/maintenance.png" style="width: 90px; margin-bottom: 10px;">
-    <h2>Hệ Thống Đang Nâng Cấp</h2>
-    <p style="color: #ccc; font-size: 14px;">MTRIET STORE đang được bảo trì để cập nhật dữ liệu.<br>Sẽ quay trở lại sau:</p>
-    
-    <div id="countdown" class="maintenance-countdown">
-        00d 00h 00m 00s
-    </div>
-
-    <p style="font-size: 13px; color: #888;">Cảm ơn bạn đã kiên nhẫn chờ đợi!</p>
-
-    <div class="secret-admin-trigger" onclick="promptAdminLogin()"></div>
-</div>
-
-<div id="popup-1" class="overlay-popup">
-    <div class="modal-popup" style="border-color: #2b1055;">
-        <div class="modal-header" style="background: #2b1055;">🎁 QUÀ TẶNG / SỰ KIỆN</div>
-        <div class="modal-body">
-            <img src="image_6.png" style="width: 100%; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/350x450?text=BANNER+SỰ+KIỆN+MỚI'">
+<div class="container">
+    <h1>Cập nhật File App sau:</h1>
+    <div id="countdown">
+        <div class="time-box">
+            <span id="days">00</span>
+            <div class="label">Ngày</div>
         </div>
-        <button class="btn-close-popup" style="background: #2b1055;" onclick="nextPopup()">XEM HƯỚNG DẪN LẤY KEY</button>
-    </div>
-</div>
-
-<div id="popup-2" class="overlay-popup" style="display: none;">
-    <div class="modal-popup">
-        <div class="modal-header">🔑 HƯỚNG DẪN NHẬN KEY</div>
-        <div class="modal-body">
-            <b style="color: red;">BẤM VÀO HÌNH GIỐNG TRONG ẢNH ĐỂ NHẬN KEY!!!</b><br><br>
-            Cú pháp: <b>("TÊN FILE HACK" KEY 1)</b>
-            <div class="modal-img-container">
-                <img src="image_7.png" onerror="this.src='https://via.placeholder.com/300x150?text=ANH+HUONG+DAN+LAY+KEY'">
-            </div>
-            <small>NẾU QUÁ 30p Không nhận được key liên hệ admin!</small>
+        <div class="time-box">
+            <span id="hours">00</span>
+            <div class="label">Giờ</div>
         </div>
-        <button class="btn-close-popup" onclick="closeAllPopups()">ĐÃ HIỂU & VÀO CỬA HÀNG</button>
-    </div>
-</div>
-
-<div class="app-wrapper">
-    <div class="header">
-        <div style="font-weight: bold; font-size: 18px;">MTRIET STORE</div>
-        <div class="cart-icon" onclick="openCart()">
-            🛒 <span class="cart-count" id="cart-count">0</span>
+        <div class="time-box">
+            <span id="minutes">00</span>
+            <div class="label">Phút</div>
+        </div>
+        <div class="time-box">
+            <span id="seconds">00</span>
+            <div class="label">Giây</div>
         </div>
     </div>
-    <div class="clock-bar" id="live-clock">Đang tải thời gian...</div>
-
-    <div class="search-bar">
-        <input type="text" id="searchInput" onkeyup="runFilters()" placeholder="Tìm kiếm mod, game, script...">
-    </div>
-
-    <div class="os-filters">
-        <button class="os-btn active" onclick="setOS('All', this)">Tất cả</button>
-        <button class="os-btn" onclick="setOS('Android', this)">Android</button>
-        <button class="os-btn" onclick="setOS('iOS', this)">iOS</button>
-        <button class="os-btn" onclick="setOS('Windows', this)">PC/Windows</button>
-    </div>
-
-    <div class="section-title">🔥 XU HƯỚNG THỊNH HÀNH</div>
-    <div id="hot-list" class="hot-scroll">
-        </div>
-
-    <div class="categories">
-        <div class="cat-item active" onclick="setGame('all', this)">
-            <img src="https://img.icons8.com/color/48/shop.png"><span>Tất cả</span>
-        </div>
-        <div class="cat-item" onclick="setGame('Roblox', this)">
-            <img src="https://img.icons8.com/color/48/roblox.png"><span>Roblox</span>
-        </div>
-        <div class="cat-item" onclick="setGame('Free Fire', this)">
-            <img src="https://img.icons8.com/color/48/free-fire.png"><span>Free Fire</span>
-        </div>
-        <div class="cat-item" onclick="setGame('Liên Quân', this)">
-            <img src="https://th.bing.com/th/id/OIP.Rre5LNQakgHst6_RnzI5UQHaHa?w=165&h=180&c=7&r=0&o=7&dpr=1.8&pid=1.7&rm=3"><span>Liên Quân</span>
-        </div>
-        <div class="cat-item" onclick="setGame('PUBG', this)">
-            <img src="https://img.icons8.com/color/48/pubg.png"><span>PUBG</span>
-        </div>
-        <div class="cat-item" onclick="setGame('8 Ball', this)">
-            <img src="data:image/webp;base64,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"><span>8 Ball</span>
-        </div>
-        <div class="cat-item" onclick="setGame('Together', this)">
-            <img src="https://th.bing.com/th/id/OIP.RO3Kgey_DU_j2bcRZsZNsgHaHa?w=146&h=180&c=7&r=0&o=7&dpr=1.8&pid=1.7&rm=3"><span>Together</span>
-        </div>
-        <div class="cat-item" onclick="setGame('Minecraft', this)">
-            <img src="https://th.bing.com/th/id/OIP.Lw7cquJss153eaY0X2h5nQHaEK?w=323&h=182&c=7&r=0&o=7&dpr=1.8&pid=1.7&rm=3"><span>Minecraft</span>
-        </div>
-    </div>
-
-    <div id="product-list" class="product-list">
-        <p style="text-align:center; padding:40px; color:#999;">Đang kết nối dữ liệu Store...</p>
-    </div>
-
-    <div class="bottom-nav">
-        <a href="#" class="nav-item active">
-            <img src="https://img.icons8.com/fluency/48/home.png"><br>Trang chủ
-        </a>
-        <a href="https://zalo.me/84383539399" target="_blank" class="nav-item">
-            <img src="https://img.icons8.com/color/48/zalo.png"><br>Zalo Admin
-        </a>
-        <a href="https://www.facebook.com/mtriet.store" target="_blank" class="nav-item">
-            <img src="https://img.icons8.com/color/48/facebook-new.png"><br>Facebook
-        </a>
-       <a href="javascript:void(0)" onclick="openProfile()" class="nav-item">
-            <img src="https://img.icons8.com/fluency/48/user-male-circle.png"><br>Tôi
-        </a>
-    </div>
-</div>
-
-<div class="cart-overlay" id="cartOverlay" onclick="if(event.target == this) closeCart()">
-    <div class="cart-modal">
-        <div class="cart-modal-header">
-            <span style="font-weight:bold; font-size:16px;">Giỏ hàng (Pass Link)</span>
-            <span class="close-btn" onclick="closeCart()">×</span>
-        </div>
-        <div class="cart-content" id="cartContent"></div>
-    </div>
-</div>
-
-<div class="cart-overlay" id="profileOverlay" onclick="if(event.target == this) closeProfile()">
-    <div class="cart-modal" style="text-align: center; padding-bottom: 20px;">
-        <div class="cart-modal-header" style="justify-content: flex-end; border-bottom: none;">
-            <span class="close-btn" onclick="closeProfile()">×</span>
-        </div>
-        <img src="https://img.icons8.com/fluency/96/user-male-circle.png" style="width: 80px; margin-top: -30px; background: #fff; border-radius: 50%; border: 3px solid #ee4d2d; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-        <h3 style="margin: 10px 0 5px 0; color: #2b1055; font-size: 18px;">NGUYỄN MINH TRIẾT</h3>
-        <p style="color: #ee4d2d; font-weight: bold; font-size: 12px; margin: 0 0 15px 0;">✔ Sinh viên IT - Software Engineer</p>
-        <div style="text-align: left; padding: 0 20px; font-size: 12px; line-height: 1.6; color: #555;">
-            <p>🔹 <b>Chuyên môn:</b> Lập trình Web & Modding Game.</p>
-            <p>🔹 <b>Founder:</b> MTRIET STORE - Uy tín tạo thương hiệu.</p>
-        </div>
-        <button onclick="window.open('https://zalo.me/84383539399')" style="background: linear-gradient(90deg, #2b1055, #ee4d2d); color: #fff; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; font-size: 11px; margin-top: 15px; cursor: pointer;">💬 LIÊN HỆ CÔNG VIỆC</button>
-    </div>
+    <p id="status">Đang tính toán thời gian...</p>
 </div>
 
 <script>
-    // === SCRIPT BẢO TRÌ BẮT BUỘC ===
-    const targetDate = new Date("April 11, 2026 12:00:00").getTime();
-    let timerInterval;
+    // Thiết lập thời gian đếm ngược (3 ngày = 259200 giây)
+    const countdownDuration = 3 * 24 * 60 * 60 * 1000;
 
-    function updateMaintenanceCountdown() {
+    // Kiểm tra xem đã có mốc thời gian bắt đầu trong máy chưa
+    let startTime = localStorage.getItem('update_start_time');
+
+    if (!startTime) {
+        // Nếu chưa có, lấy thời điểm hiện tại làm mốc bắt đầu
+        startTime = new Date().getTime();
+        localStorage.setItem('update_start_time', startTime);
+    }
+
+    const targetTime = parseInt(startTime) + countdownDuration;
+
+    function updateCountdown() {
         const now = new Date().getTime();
-        const diff = targetDate - now;
+        const distance = targetTime - now;
 
-        if (diff <= 0) {
-            document.getElementById('maintenance-overlay').style.display = 'none';
-            clearInterval(timerInterval);
+        if (distance < 0) {
+            document.getElementById("countdown").innerHTML = "<h2 style='color:#ff4d4d'>BẮT ĐẦU UPDATE FILE!</h2>";
+            document.getElementById("status").innerText = "Hệ thống đang tiến hành cập nhật...";
+            clearInterval(interval);
             return;
         }
 
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-        document.getElementById('countdown').innerText = 
-            `${days}d ${hours}h ${mins}m ${secs}s`;
+        document.getElementById("days").innerText = d.toString().padStart(2, '0');
+        document.getElementById("hours").innerText = h.toString().padStart(2, '0');
+        document.getElementById("minutes").innerText = m.toString().padStart(2, '0');
+        document.getElementById("seconds").innerText = s.toString().padStart(2, '0');
+        document.getElementById("status").innerText = "Vui lòng đợi cho đến khi hoàn tất.";
     }
 
-    function promptAdminLogin() {
-        const pass = prompt("MTRIET STORE - Nhập mã Admin để bỏ qua bảo trì:");
-        if (pass === "triet123") {
-            document.getElementById('maintenance-overlay').style.display = 'none';
-            sessionStorage.setItem('unlocked_admin', 'true');
-            clearInterval(timerInterval);
-            alert("Đã mở khóa phiên làm việc Admin!");
-        } else if (pass !== null) {
-            alert("Sai mã!");
-        }
-    }
-
-    if (sessionStorage.getItem('unlocked_admin') === 'true') {
-        document.getElementById('maintenance-overlay').style.display = 'none';
-    } else {
-        timerInterval = setInterval(updateMaintenanceCountdown, 1000);
-        updateMaintenanceCountdown();
-    }
-    // =================================
-
-
-    const SHEET_ID = '13gdK5FZ0yX01Z7mDYhV975us9l89oFx_GFVw8moyfjg';
-    const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-
-    let allData = [];
-    let cart = JSON.parse(localStorage.getItem('mtriet_cart_v2')) || [];
-    let currentOS = 'All';
-    let currentGame = 'all';
-
-    // 1. CẬP NHẬT ĐỒNG HỒ THỰC
-    function updateClock() {
-        const now = new Date();
-        const days = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
-        const dayStr = days[now.getDay()];
-        const timeStr = now.toLocaleTimeString('vi-VN');
-        const dateStr = now.toLocaleDateString('vi-VN');
-        document.getElementById('live-clock').innerText = `🕒 ${dayStr}, ${dateStr} - ${timeStr}`;
-    }
-    setInterval(updateClock, 1000);
-
-    // 2. FETCH DỮ LIỆU TỪ GOOGLE SHEET
-    async function loadData() {
-        try {
-            const res = await fetch(G_URL);
-            const text = await res.text();
-            const json = JSON.parse(text.substr(47).slice(0, -2));
-            const rows = json.table.rows;
-
-            allData = rows.map(row => ({
-                game: row.c[0]?.v || '',
-                name: row.c[1]?.v || 'No Name',
-                link: row.c[2]?.v || '#',
-                img: row.c[3]?.v || 'https://via.placeholder.com/150',
-                downloads: parseInt(row.c[4]?.v) || 0, // CỘT LƯỢT TẢI
-                update: row.c[5]?.v || 'Vừa xong',
-                os: row.c[6]?.v || 'Android'
-            }));
-
-            renderHotMods();
-            runFilters();
-        } catch (e) {
-            console.error("Lỗi kết nối Sheet:", e);
-            document.getElementById('product-list').innerHTML = "<p style='text-align:center;'>Không thể tải dữ liệu. Vui lòng kiểm tra link Sheet!</p>";
-        }
-    }
-
-    // 3. RENDER TOP 10 MOD THỊNH HÀNH
-    function renderHotMods() {
-        // Sắp xếp theo downloads giảm dần, lấy 10 cái đầu
-        const hotItems = [...allData].sort((a, b) => b.downloads - a.downloads).slice(0, 10);
-        const container = document.getElementById('hot-list');
-        
-        container.innerHTML = hotItems.map(item => `
-            <div class="hot-item" onclick="window.open('${item.link}')">
-                <div class="badge-hot">🔥 TOP</div>
-                <img src="${item.img}" onerror="this.src='https://via.placeholder.com/150'">
-                <p>${item.name}</p>
-                <div class="hot-dl-count">📊 ${item.downloads.toLocaleString()} lượt tải</div>
-            </div>
-        `).join('');
-    }
-
-    // 4. BỘ LỌC TỔNG HỢP (OS, GAME, SEARCH)
-    function setOS(val, el) {
-        currentOS = val;
-        document.querySelectorAll('.os-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        runFilters();
-    }
-
-    function setGame(val, el) {
-        currentGame = val;
-        document.querySelectorAll('.cat-item').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        runFilters();
-    }
-
-    function runFilters() {
-        const search = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = allData.filter(item => {
-            const matchSearch = item.name.toLowerCase().includes(search);
-            const matchGame = (currentGame === 'all' || item.game.includes(currentGame));
-            
-            // Logic lọc OS thông minh (PC khớp với Windows)a
-            let matchOS = false;
-            if (currentOS === 'All') matchOS = true;
-            else if (currentOS === 'Windows' && (item.os.includes('PC') || item.os.includes('Windows'))) matchOS = true;
-            else if (item.os.includes(currentOS)) matchOS = true;
-
-            return matchSearch && matchGame && matchOS;
-        });
-
-        renderGrid(filtered);
-    }
-
-    function renderGrid(data) {
-        const grid = document.getElementById('product-list');
-        if (data.length === 0) {
-            grid.innerHTML = "<p style='text-align:center; padding:20px;'>Không tìm thấy Mod phù hợp!</p>";
-            return;
-        }
-        grid.innerHTML = data.map(item => `
-            <div class="card">
-                <img src="${item.img}" onerror="this.src='https://via.placeholder.com/150'">
-                <div class="info">
-                    <div class="title">${item.name}</div>
-                    <div class="date-os">📅 ${item.update} | 📱 ${item.os}</div>
-                    <div class="btn-row">
-                        <button class="btn-add" onclick="addCart('${item.name}','${item.link}')">🛒 Giỏ</button>
-                        <button class="btn-dl" onclick="window.open('${item.link}')">Tải ngay</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // 5. GIỎ HÀNG & PROFILE (GIỮ LOGIC CỦA ÔNG)
-    function addCart(n, l) {
-        if(!cart.find(i => i.name === n)) {
-            cart.push({name: n, link: l}); 
-            localStorage.setItem('mtriet_cart_v2', JSON.stringify(cart));
-            updateBadge();
-            alert("Đã thêm vào giỏ!");
-        } else {
-            alert("Sản phẩm đã có trong giỏ!");
-        }
-    }
-
-    function updateBadge() { document.getElementById('cart-count').innerText = cart.length; }
-    function openCart() {
-        let cont = document.getElementById('cartContent');
-        if(cart.length === 0) { alert("Giỏ hàng đang trống!"); return; }
-        cont.innerHTML = cart.map((item, index) => `
-            <div class="cart-item">
-                <span style="font-size:13px; font-weight:500;">${item.name}</span>
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <button class="btn-vượt" onclick="window.open('${item.link}')">Vượt Link</button>
-                    <span style="color:#ff4d4d; cursor:pointer; font-size:18px;" onclick="removeItem(${index})">✕</span>
-                </div>
-            </div>
-        `).join('');
-        document.getElementById('cartOverlay').style.display = 'flex';
-    }
-    function closeCart() { document.getElementById('cartOverlay').style.display = 'none'; }
-    function removeItem(idx) {
-        cart.splice(idx, 1);
-        localStorage.setItem('mtriet_cart_v2', JSON.stringify(cart));
-        updateBadge();
-        if(cart.length === 0) closeCart(); else openCart();
-    }
-    function closePopup() { document.getElementById('welcome-popup').style.display = 'none'; }
-    function openProfile() { document.getElementById('profileOverlay').style.display = 'flex'; }
-    function closeProfile() { document.getElementById('profileOverlay').style.display = 'none'; }
-
-    // Hàm chuyển từ Popup 1 sang Popup 2
-    function nextPopup() {
-        document.getElementById('popup-1').style.display = 'none';
-        document.getElementById('popup-2').style.display = 'flex';
-    }
-
-    // Hàm đóng toàn bộ để vào web
-    function closeAllPopups() {
-        document.getElementById('popup-2').style.display = 'none';
-        sessionStorage.setItem('viewed_popup', 'true');
-    }
-
-    window.onload = () => {
-        // Nếu chưa xem popup trong phiên làm việc này thì hiện
-        if (!sessionStorage.getItem('viewed_popup')) {
-            document.getElementById('popup-1').style.display = 'flex';
-        } else {
-            document.getElementById('popup-1').style.display = 'none';
-        }
-        loadData();
-        updateClock();
-        updateBadge();
-    };
+    const interval = setInterval(updateCountdown, 1000);
+    updateCountdown();
 </script>
+
 </body>
-</html> 
+</html>
