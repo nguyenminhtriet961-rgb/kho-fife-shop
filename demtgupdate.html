@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đếm ngược cập nhật App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 15px;
+            background: #2d2d2d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        h1 { margin-bottom: 20px; font-weight: 300; }
+        #countdown {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .time-box {
+            background: #444;
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 70px;
+        }
+        .time-box span {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        .label { font-size: 0.8rem; text-transform: uppercase; margin-top: 5px; }
+        #status { margin-top: 25px; font-style: italic; color: #aaa; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cập nhật File App sau:</h1>
+    <div id="countdown">
+        <div class="time-box">
+            <span id="days">00</span>
+            <div class="label">Ngày</div>
+        </div>
+        <div class="time-box">
+            <span id="hours">00</span>
+            <div class="label">Giờ</div>
+        </div>
+        <div class="time-box">
+            <span id="minutes">00</span>
+            <div class="label">Phút</div>
+        </div>
+        <div class="time-box">
+            <span id="seconds">00</span>
+            <div class="label">Giây</div>
+        </div>
+    </div>
+    <p id="status">Đang tính toán thời gian...</p>
+</div>
+
+<script>
+    // Thiết lập thời gian đếm ngược (3 ngày = 259200 giây)
+    const countdownDuration = 3 * 24 * 60 * 60 * 1000;
+
+    // Kiểm tra xem đã có mốc thời gian bắt đầu trong máy chưa
+    let startTime = localStorage.getItem('update_start_time');
+
+    if (!startTime) {
+        // Nếu chưa có, lấy thời điểm hiện tại làm mốc bắt đầu
+        startTime = new Date().getTime();
+        localStorage.setItem('update_start_time', startTime);
+    }
+
+    const targetTime = parseInt(startTime) + countdownDuration;
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetTime - now;
+
+        if (distance < 0) {
+            document.getElementById("countdown").innerHTML = "<h2 style='color:#ff4d4d'>BẮT ĐẦU UPDATE FILE!</h2>";
+            document.getElementById("status").innerText = "Hệ thống đang tiến hành cập nhật...";
+            clearInterval(interval);
+            return;
+        }
+
+        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("days").innerText = d.toString().padStart(2, '0');
+        document.getElementById("hours").innerText = h.toString().padStart(2, '0');
+        document.getElementById("minutes").innerText = m.toString().padStart(2, '0');
+        document.getElementById("seconds").innerText = s.toString().padStart(2, '0');
+        document.getElementById("status").innerText = "Vui lòng đợi cho đến khi hoàn tất.";
+    }
+
+    const interval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+</script>
+
+</body>
+</html>
