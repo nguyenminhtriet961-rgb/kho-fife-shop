@@ -2,113 +2,175 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đếm ngược cập nhật App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CẬP NHẬT PHIÊN BẢN MỚI | MTRIET STORE V2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Orbitron:wght@900&family=Fira+Code:wght@500;900&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #1a1a1a;
-            color: #ffffff;
+        :root {
+            --bg-dark: #050508;
+            --accent-fire: #ff4d00;
+            --accent-gold: #ffdd00;
+            --accent-red: #ff003c;
         }
-        .container {
-            text-align: center;
-            padding: 2rem;
-            border-radius: 15px;
-            background: #2d2d2d;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        h1 { margin-bottom: 20px; font-weight: 300; }
-        #countdown {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-        .time-box {
-            background: #444;
-            padding: 15px;
-            border-radius: 8px;
-            min-width: 70px;
-        }
-        .time-box span {
-            display: block;
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #00d4ff;
-        }
-        .label { font-size: 0.8rem; text-transform: uppercase; margin-top: 5px; }
-        #status { margin-top: 25px; font-style: italic; color: #aaa; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+
+        /* Nền tàn lửa bay */
+        #fire-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .scanlines { position: absolute; inset: 0; z-index: 10; pointer-events: none; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 100, 0.02)); background-size: 100% 3px, 3px 100%; }
+
+        .update-card { position: relative; z-index: 5; background: rgba(20, 20, 28, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 40px; padding: 30px 25px; text-align: center; width: 90%; max-width: 480px; backdrop-filter: blur(25px); box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 30px rgba(255, 77, 0, 0.1); animation: cardEntrance 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        
+        @keyframes cardEntrance { from { opacity: 0; transform: translateY(30px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        /* Logo Ngựa Lửa */
+        .logo-wrapper { position: relative; width: 140px; height: 140px; margin: 0 auto 20px; animation: float 4s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .logo-img { width: 100%; height: 100%; border-radius: 35px; object-fit: cover; border: 3px solid var(--accent-gold); box-shadow: 0 0 30px rgba(255, 77, 0, 0.8), inset 0 0 15px rgba(255,0,60,0.5); z-index: 2; position: relative;}
+        .logo-aura { position: absolute; inset: -15px; border-radius: 50px; background: radial-gradient(circle, var(--accent-fire), var(--accent-red), transparent 70%); filter: blur(25px); opacity: 0.6; z-index: 1; animation: auraPulse 2s infinite alternate; }
+        @keyframes auraPulse { to { opacity: 0.9; transform: scale(1.1); } }
+
+        /* Text Content */
+        .title { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900; margin-bottom: 5px; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
+        .highlight { background: linear-gradient(90deg, var(--accent-gold), var(--accent-fire), var(--accent-red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(255,123,0,0.5)); }
+        .desc { font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 25px; padding: 0 10px; }
+
+        /* Countdown Timer Mini */
+        .timer-container { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,123,0,0.3); border-radius: 20px; padding: 15px; margin-bottom: 25px; box-shadow: inset 0 0 20px rgba(255,0,60,0.1); }
+        .timer-label { font-size: 10px; font-weight: 800; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; animation: blink 1s infinite alternate; }
+        @keyframes blink { to { opacity: 0.4; } }
+        
+        .countdown-boxes { display: flex; justify-content: center; gap: 10px; }
+        .time-box { display: flex; flex-direction: column; min-width: 60px; }
+        .time-val { font-family: 'Fira Code', monospace; font-size: 26px; font-weight: 900; color: #fff; text-shadow: 0 0 15px var(--accent-fire); line-height: 1; margin-bottom: 2px; }
+        .time-lbl { font-size: 9px; font-weight: 800; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Nút Tải Ngay */
+        .btn-download { display: block; width: 100%; padding: 18px; border-radius: 18px; background: linear-gradient(90deg, #ff003c, #ff4d00, #ffdd00); background-size: 200% auto; color: #fff; text-decoration: none; font-weight: 900; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 30px rgba(255, 77, 0, 0.4); transition: 0.3s; animation: gradientShift 3s ease infinite, shakeBtn 5s infinite; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .btn-download:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(255, 77, 0, 0.6); }
+        .btn-download:active { transform: translateY(0) scale(0.98); }
+
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes shakeBtn { 0%, 90%, 100% { transform: rotate(0); } 92% { transform: rotate(2deg); } 94% { transform: rotate(-2deg); } 96% { transform: rotate(2deg); } 98% { transform: rotate(-2deg); } }
+
+        .footer-info { margin-top: 20px; font-family: 'Fira Code', monospace; font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Cập nhật File App sau:</h1>
-    <div id="countdown">
-        <div class="time-box">
-            <span id="days">00</span>
-            <div class="label">Ngày</div>
-        </div>
-        <div class="time-box">
-            <span id="hours">00</span>
-            <div class="label">Giờ</div>
-        </div>
-        <div class="time-box">
-            <span id="minutes">00</span>
-            <div class="label">Phút</div>
-        </div>
-        <div class="time-box">
-            <span id="seconds">00</span>
-            <div class="label">Giây</div>
+<canvas id="fire-canvas"></canvas>
+<div class="scanlines"></div>
+
+<div class="update-card">
+    <div class="logo-wrapper">
+        <div class="logo-aura"></div>
+        <img src="app.png" alt="MTRIET STORE" class="logo-img">
+    </div>
+
+    <h1 class="title">HÃY CẬP NHẬT <br><span class="highlight">BẢN GAME MỚI</span></h1>
+    <p class="desc">Kho File Game VIP đã được nâng cấp. Vui lòng tải bản APK mới nhất để không bị gián đoạn trải nghiệm!</p>
+
+    <div class="timer-container">
+        <div class="timer-label">⏳ THỜI GIAN SỰ KIỆN CÒN LẠI ⏳</div>
+        <div class="countdown-boxes">
+            <div class="time-box"><span class="time-val" id="cd-hours">24</span><span class="time-lbl">GIỜ</span></div>
+            <div style="font-size: 20px; font-weight: bold; color: #555; line-height: 1.2;">:</div>
+            <div class="time-box"><span class="time-val" id="cd-minutes">00</span><span class="time-lbl">PHÚT</span></div>
+            <div style="font-size: 20px; font-weight: bold; color: #555; line-height: 1.2;">:</div>
+            <div class="time-box"><span class="time-val" id="cd-seconds">00</span><span class="time-lbl">GIÂY</span></div>
         </div>
     </div>
-    <p id="status">Đang tính toán thời gian...</p>
+
+    <a href="https://www.mediafire.com/file/h3006c3pdyl5dr4/MTRIET_MOD_STORE.apk/file" class="btn-download">
+        🚀 TẢI XUỐNG BẢN V2 NGAY
+    </a>
+
+    <div class="footer-info">System: Android / PC | Security: 100% Verified</div>
 </div>
 
 <script>
-    // Thiết lập thời gian đếm ngược (3 ngày = 259200 giây)
-    const countdownDuration = 3 * 24 * 60 * 60 * 1000;
+    // --- 1. HIỆU ỨNG TÀN LỬA (SPARKS) ---
+    const canvas = document.getElementById('fire-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
 
-    // Kiểm tra xem đã có mốc thời gian bắt đầu trong máy chưa
-    let startTime = localStorage.getItem('update_start_time');
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
 
-    if (!startTime) {
-        // Nếu chưa có, lấy thời điểm hiện tại làm mốc bắt đầu
-        startTime = new Date().getTime();
-        localStorage.setItem('update_start_time', startTime);
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = canvas.height + Math.random() * 100;
+            this.size = Math.random() * 2.5 + 0.5;
+            this.speedY = Math.random() * -2 - 0.5;
+            this.speedX = (Math.random() - 0.5) * 1.5;
+            this.opacity = Math.random() * 0.6 + 0.2;
+        }
+        update() {
+            this.y += this.speedY;
+            this.x += this.speedX + Math.sin(this.y * 0.01) * 0.8;
+            if (this.y < -10) {
+                this.y = canvas.height + 10;
+                this.x = Math.random() * canvas.width;
+            }
+        }
+        draw() {
+            ctx.fillStyle = `rgba(255, ${Math.floor(Math.random() * 120) + 100}, 0, ${this.opacity})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
     }
 
-    const targetTime = parseInt(startTime) + countdownDuration;
+    function init() { for (let i = 0; i < 60; i++) particles.push(new Particle()); }
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+    }
+    init(); animate();
 
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = targetTime - now;
-
-        if (distance < 0) {
-            document.getElementById("countdown").innerHTML = "<h2 style='color:#ff4d4d'>BẮT ĐẦU UPDATE FILE!</h2>";
-            document.getElementById("status").innerText = "Hệ thống đang tiến hành cập nhật...";
-            clearInterval(interval);
-            return;
+    // --- 2. THUẬT TOÁN ĐẾM NGƯỢC 24 GIỜ (CÓ LƯU CACHE) ---
+    function startCountdown() {
+        const HOURS_24_IN_MS = 24 * 60 * 60 * 1000;
+        let endTime = localStorage.getItem('mtriet_v2_update_time');
+        
+        if (!endTime) {
+            endTime = new Date().getTime() + HOURS_24_IN_MS;
+            localStorage.setItem('mtriet_v2_update_time', endTime);
         }
 
-        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((distance % (1000 * 60)) / 1000);
+        const timer = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = endTime - now;
 
-        document.getElementById("days").innerText = d.toString().padStart(2, '0');
-        document.getElementById("hours").innerText = h.toString().padStart(2, '0');
-        document.getElementById("minutes").innerText = m.toString().padStart(2, '0');
-        document.getElementById("seconds").innerText = s.toString().padStart(2, '0');
-        document.getElementById("status").innerText = "Vui lòng đợi cho đến khi hoàn tất.";
+            if (distance < 0) {
+                clearInterval(timer);
+                document.getElementById('cd-hours').innerText = "00";
+                document.getElementById('cd-minutes').innerText = "00";
+                document.getElementById('cd-seconds').innerText = "00";
+                document.querySelector('.timer-label').innerText = "❌ SỰ KIỆN ĐÃ KẾT THÚC ❌";
+                document.querySelector('.timer-label').style.color = "#ff003c";
+                return;
+            }
+
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('cd-hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('cd-minutes').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('cd-seconds').innerText = seconds.toString().padStart(2, '0');
+        }, 1000);
     }
-
-    const interval = setInterval(updateCountdown, 1000);
-    updateCountdown();
+    startCountdown();
 </script>
 
 </body>
